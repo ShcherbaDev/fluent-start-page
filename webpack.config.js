@@ -34,7 +34,9 @@ module.exports = (env) => ({
 		}),
 		new EslintWebpackPlugin({
 			exclude: ['node_modules', 'dist', 'public'],
-			context: path.resolve(__dirname, 'src')
+			context: path.resolve(__dirname, 'src'),
+			emitWarning: env.dev !== true,
+			emitError: env.dev !== true
 		}),
 		new DefinePlugin({
 			'process.env.BASE_URL': JSON.stringify(process.env.BASE_URL)
@@ -60,7 +62,9 @@ module.exports = (env) => ({
 						loader: 'css-loader',
 						options: {
 							importLoaders: 1,
+							esModule: false,
 							modules: {
+								auto: /\.module\.(sa|sc|c)ss$/i,
 								localIdentName: '[local]--[name]--[hash:base64:5]'
 							}
 						}
@@ -68,6 +72,10 @@ module.exports = (env) => ({
 					'postcss-loader',
 					'sass-loader'
 				]
+			},
+			{
+				test: /\.(woff|woff2|eot|ttf|otf)$/i,
+				type: 'asset/resource'
 			}
 		]
 	}
